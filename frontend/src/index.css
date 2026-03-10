@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Table styling for assistant messages */
+.assistant-message table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: 1rem 0;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.assistant-message thead {
+  background-color: #f9fafb;
+}
+
+.assistant-message th,
+.assistant-message td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  min-width: 120px;
+}
+
+.assistant-message th {
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.assistant-message td {
+  color: #4b5563;
+}
+
+.assistant-message tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* List styling inside assistant messages */
+.assistant-message ul,
+.assistant-message ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.assistant-message li {
+  margin: 0.25rem 0;
+}

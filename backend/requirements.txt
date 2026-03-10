@@ -1,0 +1,21 @@
+# AIPE Backend Dependencies
+
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# LLM client (OpenAI-compatible, works with Groq)
+openai>=1.50.0
+
+# Database
+asyncpg>=0.30.0
+
+# Embeddings (CPU inference)
+sentence-transformers>=3.0.0
+torch>=2.2.0
+
+# Config
+pydantic-settings>=2.5.0
+
+# Utilities
+python-dotenv>=1.0.0
