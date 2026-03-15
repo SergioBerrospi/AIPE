@@ -74,7 +74,15 @@ async def generate_answer(
         extra_body={"reasoning_effort": "none"},
     )
 
-    return response.choices[0].message.content
+    answer = response.choices[0].message.content
+
+    logger.info(
+        f"LLM answer generated | query='{query[:80]}' | "
+        f"answer_length={len(answer)} chars"
+    )
+    logger.info(f"LLM full answer:\n{answer}")
+
+    return answer
 
 
 async def generate_answer_stream(
@@ -96,7 +104,19 @@ async def generate_answer_stream(
         extra_body={"reasoning_effort": "none"},
     )
 
+    # Accumulate the full answer while streaming
+    full_answer = []
+
     async for chunk in stream:
         delta = chunk.choices[0].delta
         if delta.content:
+            full_answer.append(delta.content)
             yield delta.content
+
+    # Log the complete answer after streaming finishes
+    answer_text = "".join(full_answer)
+    logger.info(
+        f"LLM streamed answer | query='{query[:80]}' | "
+        f"answer_length={len(answer_text)} chars"
+    )
+    logger.info(f"LLM full answer:\n{answer_text}")
