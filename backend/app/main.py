@@ -4,12 +4,19 @@ FastAPI application for the RAG-based electoral analysis chat.
 """
 
 import logging
+import os
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+
 from app.config import get_settings
+from app.middleware.rate_limit import limiter, rate_limit_exceeded_handler
 from app.models.schemas import HealthResponse
 from app.routers import chat
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -42,10 +49,26 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — adjust origins for your frontend
+# ---------------------------------------------------------------------------
+# Rate limiting
+# ---------------------------------------------------------------------------
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+
+# ---------------------------------------------------------------------------
+# CORS — reads FRONTEND_URL from environment for production
+# ---------------------------------------------------------------------------
+_frontend_url = os.getenv("FRONTEND_URL", "")
+CORS_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
+if _frontend_url:
+    CORS_ORIGINS.append(_frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: restrict in production
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

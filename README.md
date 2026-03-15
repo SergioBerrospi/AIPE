@@ -56,6 +56,8 @@ cp .env.example .env
 uvicorn app.main:app --reload
 ```
 
+python -m uvicorn app.main:app --reload
+
 ### API Endpoints
 
 | Endpoint | Method | Description |
