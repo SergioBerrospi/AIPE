@@ -31,7 +31,7 @@ class Source(BaseModel):
     similarity: float
     is_context: bool = False
     chunk_index: Optional[int] = None
-    interview_id: Optional[int] = None
+    interview_id: Optional[str] = None
 
 
 # ─── API models ───────────────────────────────────────────────────────────
