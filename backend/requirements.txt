@@ -13,9 +13,11 @@ openai>=1.50.0
 # Database
 asyncpg>=0.30.0
 
-# Embeddings (CPU inference)
+# Embeddings (CPU-only — no CUDA needed for single-query inference)
+# This cuts ~2GB from the Docker image vs the default CUDA-bundled torch
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.2.0+cpu
 sentence-transformers>=3.0.0
-torch>=2.2.0
 
 # Config
 pydantic-settings>=2.5.0
