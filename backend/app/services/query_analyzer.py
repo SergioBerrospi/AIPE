@@ -118,6 +118,21 @@ No importa si también pregunta sobre un tema. "¿Qué dice Keiko sobre economí
 
 Solo clasifica como GENERAL si NO aparece ningún nombre de candidato o partido.
 
+## REGLA DE DESAMBIGUACIÓN (MUY IMPORTANTE)
+
+Varios candidatos comparten apellidos. DEBES usar TODOS los apellidos o palabras mencionados \
+para identificar al candidato correcto. Revisa la lista completa de candidatos antes de decidir.
+
+Ejemplos de desambiguación:
+- "López Aliaga" → Rafael López Aliaga (NO Alfonso López Chau)
+- "López Chau" → Alfonso López Chau (NO Rafael López Aliaga)
+- "López" solo, sin más contexto → incluye AMBOS candidatos que tengan "López" en su nombre
+- "Fujimori" → Keiko Fujimori (a menos que especifique otro Fujimori)
+
+REGLA: Si el usuario escribe un apellido que coincide con VARIOS candidatos y NO da más \
+contexto para distinguir, devuelve los candidate_ids de TODOS los candidatos que coincidan. \
+Es mejor devolver varios candidatos que confundir uno con otro.
+
 Responde ÚNICAMENTE con JSON válido, sin texto extra:
 
 {"query_type": "specific" o "general", "candidate_ids": [IDs], "reasoning": "una línea"}
