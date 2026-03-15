@@ -16,7 +16,7 @@ asyncpg>=0.30.0
 # Embeddings (CPU-only — no CUDA needed for single-query inference)
 # This cuts ~2GB from the Docker image vs the default CUDA-bundled torch
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch>=2.2.0+cpu
+torch==2.6.0+cpu
 sentence-transformers>=3.0.0
 
 # Config
