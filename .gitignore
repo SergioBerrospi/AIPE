@@ -29,7 +29,6 @@ Thumbs.db
 desktop.ini
 
 # ─── Model cache (large files) ─────────────────────
-models/
 *.bin
 *.safetensors
 
