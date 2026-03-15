@@ -2,9 +2,10 @@
 
 import json
 import logging
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from app.models.schemas import ChatRequest, ChatResponse
+from app.middleware.rate_limit import limiter
 from app.services.query_analyzer import analyze_query
 from app.services.retriever import retrieve
 from app.services.llm import generate_answer, generate_answer_stream
@@ -20,14 +21,15 @@ NO_RESULTS_MSG = (
 
 
 @router.post("", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+@limiter.limit("20/minute")
+async def chat(request: Request, body: ChatRequest):
     """Non-streaming chat: returns full answer + sources."""
 
     # Stage 1: LLM router classifies the query
-    analysis = await analyze_query(request.message)
+    analysis = await analyze_query(body.message)
 
     # Stage 2: Retrieve with the right strategy
-    sources = await retrieve(request.message, analysis)
+    sources = await retrieve(body.message, analysis)
 
     if not sources:
         return ChatResponse(
@@ -40,9 +42,9 @@ async def chat(request: ChatRequest):
 
     # Stage 3: Generate answer with conversation history
     answer = await generate_answer(
-        request.message,
+        body.message,
         sources,
-        conversation_history=request.conversation_history,
+        conversation_history=body.conversation_history,
     )
 
     return ChatResponse(
@@ -55,11 +57,12 @@ async def chat(request: ChatRequest):
 
 
 @router.post("/stream")
-async def chat_stream(request: ChatRequest):
+@limiter.limit("20/minute")
+async def chat_stream(request: Request, body: ChatRequest):
     """Streaming chat: returns answer as Server-Sent Events."""
 
-    analysis = await analyze_query(request.message)
-    sources = await retrieve(request.message, analysis)
+    analysis = await analyze_query(body.message)
+    sources = await retrieve(body.message, analysis)
 
     async def event_stream():
         yield f"data: {json.dumps({'type': 'analysis', 'query_type': 'specific' if analysis.is_specific else 'general', 'detected_candidates': analysis.candidate_names, 'detected_parties': analysis.party_names})}\n\n"
@@ -73,9 +76,9 @@ async def chat_stream(request: ChatRequest):
             return
 
         async for chunk in generate_answer_stream(
-            request.message,
+            body.message,
             sources,
-            conversation_history=request.conversation_history,
+            conversation_history=body.conversation_history,
         ):
             yield f"data: {json.dumps({'type': 'text', 'content': chunk})}\n\n"
 
